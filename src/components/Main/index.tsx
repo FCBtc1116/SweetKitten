@@ -1,16 +1,16 @@
 import React from "react";
-import { blogType } from "../../Common/global";
+import { BlogType } from "../../common/global";
 
 export default function Main(props: {
   visible: boolean;
-  showData: Array<blogType>;
+  blogDatas: BlogType[];
 }) {
   return (
     <div>
       {props.visible &&
-        props.showData.map((item: blogType, _key: number) => {
+        props.blogDatas.map((item: BlogType, _key: number) => {
           return (
-            <div key={_key}>
+            <div key={item.title}>
               <label style={{ marginRight: "20px" }}>{item.title}</label>
               <label>
                 <b>{item.user}</b>

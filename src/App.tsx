@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import "./App.css";
-import { secretText, keyBetweenTime, showDataTime } from "./Common/global";
+import { secretText, keyBetweenTime, showDataTime } from "./common/global";
 import Header from "./components/Header";
 import Main from "./components/Main";
-import { blogType } from "./Common/global";
+import { BlogType } from "./common/global";
 
 function App() {
-  const intervalRef: { current: NodeJS.Timeout | null } = useRef(null);
-  const pressKey = useRef<string>("");
-  const startSecretType = useRef<boolean>(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const pressKey = useRef("");
+  const startSecretType = useRef(false);
   const [typeText, setTypeText] = useState("");
   const [showSecretText, setShowSecretText] = useState(false);
-  const [showData, setShowData] = useState<Array<blogType>>([]);
+  const [showData, setShowData] = useState<BlogType[]>([]);
 
   const resetState = () => {
     setTypeText("");
@@ -47,7 +47,7 @@ function App() {
   );
 
   const addShowData = useCallback(
-    (data: Array<blogType>) => {
+    (data: BlogType[]) => {
       data.map((item: any, _index: number) => {
         if (_index >= 5) return;
         setShowData((t) => [
@@ -86,23 +86,21 @@ function App() {
 
   useEffect(() => {
     if (showSecretText) {
-      const showTimer = setTimeout(() => {
+      const showDataTimer = setTimeout(() => {
         setShowSecretText((prevState) => (prevState = !prevState));
         setShowData([]);
       }, showDataTime);
       (async () => {
-        await fetch("https://api.github.com/repos/elixir-lang/elixir/issues")
-          .then((res) => {
-            Promise.any([res.json()]).then((data) => {
-              addShowData(data);
-            });
-          })
-          .catch((err) => {
-            throw err;
+        await fetch(
+          "https://api.github.com/repos/elixir-lang/elixir/issues"
+        ).then((res) => {
+          Promise.any([res.json()]).then((data) => {
+            addShowData(data);
           });
+        });
       })();
       return () => {
-        clearTimeout(showTimer);
+        clearTimeout(showDataTimer);
       };
     }
   }, [showSecretText]);
@@ -110,7 +108,7 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <Main showData={showData} visible={showSecretText} />
+      <Main blogDatas={showData} visible={showSecretText} />
     </div>
   );
 }
