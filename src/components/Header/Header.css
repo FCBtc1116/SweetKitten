@@ -1,0 +1,9 @@
+.header {
+    background-color: #87ceeb;
+}
+.header__title {
+    font-weight: bold;
+    color: blue;
+    font-size: 4rem;
+}
+
